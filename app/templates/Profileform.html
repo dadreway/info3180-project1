@@ -1,0 +1,23 @@
+{% extends 'base.html'%}
+
+{% block main %}
+
+ <div class="accountinfo">
+            <h1>Create Profile</h1>
+        <form action=" " method="POST" enctype="multipart/form-data">
+        <input name="first_name" value="submit" type="hidden"> first Name:<br>
+        <input name="last_name" size="50" type="text"><br>Last Name:<br>
+        <input name="age" size="50" type="text"><br> Age:<br>
+        <input name="bio" size="50" type="text"><br> Bio:<br>
+        <textarea name="message" rows="10" cols="50">
+        </textarea><br><br>
+        <label for="gender">Gender: </label><br>
+        <input type="radio" name="gender" value="male"> Male
+        <input type="radio" name="gender" value="female"> Female<br>
+        <label for="file"> Upload a profile picture </label><br>
+        <input type="file" name="file" />
+        <button type="submit" name="submit" class="btn btn-primary">Save file</button>
+        </form>
+ </div>
+
+{% endblock %}

@@ -5,8 +5,11 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 import os
-from app import app
+from app import app, db, login_manager
 from flask import render_template, request, redirect, url_for, flash, session, abort, jsonify
+from flask_login import login_user, logout_user, current_user, login_required
+from forms import LoginForm
+from models import UserProfile
 from werkzeug.utils import secure_filename
 
 
@@ -25,7 +28,26 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
-@app.route('/add-file', methods=['POST', 'GET'])
+@app.route('/createaccount', methods=['POST'])
+def newaccount():
+    """Creates new account"""
+    if request.method == 'POST':
+        fname = request.form['first_name']
+        lname = request.form['last_name']
+        age = request.form['age']
+        bio =request.form['bio']
+        gender =request.form['gender']
+        profilepic = request.files['file']
+        
+        db = connect_db()
+        
+        db.execute('insert into users(fname, lname, age, gender, bio, profilepic)',fname, lname, age, gender, bio, profilepic)
+        db.commit()
+        flash('New User was successfully added')
+        return redirect(url_for('home'))
+    return render_template('Profileform.html')
+
+@app.route('/addfile', methods=['POST'])    
 def add_file():
     if not session.get('logged_in'):
         abort(401)
