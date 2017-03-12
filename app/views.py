@@ -5,12 +5,16 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 import os
-from app import app, db, login_manager
+from app import app
+from app import db
 from flask import render_template, request, redirect, url_for, flash, session, abort, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
-from forms import LoginForm
+from forms import SignupForm
 from models import UserProfile
 from werkzeug.utils import secure_filename
+import time
+import uuid
+
 
 
 ###
@@ -27,61 +31,33 @@ def home():
 def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
-
-@app.route('/createaccount', methods=['POST'])
-def newaccount():
-    """Creates new account"""
+    
+@app.route('/profile', methods=['POST','GET'])
+def newprofile():
+    """Creates new profile"""
+    
     if request.method == 'POST':
+        uid = str(uuid.uuid4().fields[-1])[:8]
+        created = time.strftime('%Y/%b/%d')
         fname = request.form['first_name']
         lname = request.form['last_name']
         age = request.form['age']
         bio =request.form['bio']
         gender =request.form['gender']
+        
+        
         profilepic = request.files['file']
-        
-        db = connect_db()
-        
-        db.execute('insert into users(fname, lname, age, gender, bio, profilepic)',fname, lname, age, gender, bio, profilepic)
-        db.commit()
+        if profilepic:
+            uploadfolder = app.config['UPLOAD_FOLDER']
+            filename = secure_filename(profilepic.filename)
+            profilepic.save(os.path.join(uploadfolder, filename))
+        user = UserProfile(userid= uid, first_name=fname, last_name=lname, age = age, gender=gender, bio=bio, created = created, pic=profilepic.filename)
+        db.session.add(user)
+        db.session.commit()
         flash('New User was successfully added')
         return redirect(url_for('home'))
     return render_template('Profileform.html')
-
-@app.route('/addfile', methods=['POST'])    
-def add_file():
-    if not session.get('logged_in'):
-        abort(401)
-
-    file_folder = ''
-
-    if request.method == 'POST':
-        file = request.files['file']
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(file_folder, filename))
-
-        flash('File Saved')
-        return redirect(url_for('home'))
-
-    return render_template('add_file.html')
-
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    error = None
-    if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME'] or request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid username or password'
-        else:
-            session['logged_in'] = True
-            
-            flash('You were logged in')
-            return redirect(url_for('add_file'))
-    return render_template('login.html', error=error)
-
-@app.route('/logout')
-def logout():
-    session.pop('logged_in', None)
-    flash('You were logged out')
-    return redirect(url_for('home'))
+    
 
 
 ###

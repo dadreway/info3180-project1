@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+
+{%block main %}
+    <h1>Profile</h1>
+    <img src="{{url_for('static',filename='Mace_Windu.png')}}" id="ProfilePic">
+    <div class="biobox">
+        <div id="Name"><b>Mace Windu</b></div>
+        <div id="Date" class="bottomborder">Today's date is: {{ time }}</div>
+        <div id="UserName"><b>Username:</b> Que-ball</div>
+        <div id="IDNum"><b>ID Number:</b> 620088048</div>
+        <div id="Age"><b>Age:</b> 50</div>
+        <div id="Gender" class="bottomborder"><b>Gender:</b> Male</div>
+        <div id="AboutMe">Master Jedi, Member of the Jedi Council.</div>
+    </div>
+{% endblock %}
