@@ -6,9 +6,10 @@
     <h1>Profiles</h1>
     <br/>
     <div>
-        <!--<form action="{{ url_for('profiles') }}" method="post"  enctype="application/json">
+        <form action="{{ url_for('profiles') }}" method="post"  enctype="application/json">
+            <p>Click The button below to return JSON info</p>
             <button class="btn btn-lg btn-info submit-btn" type="submit">POST</button>
-        </form>-->
+        </form><br><br>
     </div>
     {% for profile in profile %}
         {% include 'individualprofile.html' %}
