@@ -1,7 +1,7 @@
 from . import db
 
 class UserProfile(db.Model):
-    userid = db.Column(db.String(7), primary_key=True)
+    id = db.Column(db.String(7), primary_key=True)
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
     username = db.Column(db.String(80))
@@ -11,7 +11,8 @@ class UserProfile(db.Model):
     created = db.Column(db.DateTime())
     pic = db.Column(db.String(80))
     
-    
+
+
     def is_authenticated(self):
         return True
 
@@ -23,9 +24,20 @@ class UserProfile(db.Model):
 
     def get_id(self):
         try:
-            return unicode(self.id)  # python 2 support
+            return unicode(self.userid)  # python 2 support
         except NameError:
-            return str(self.id)  # python 3 support
+            return str(self.userid)  # python 3 support
 
     def __repr__(self):
         return '<User %r>' % (self.username)
+        
+    #def __init__(self, fName, lName, username, age, bio, image, gender, created):
+    #    self.first_name = fName
+    #    self.last_name = lName
+    #    self.username = username
+    #    self.age = age
+    #    self.gender = gender
+    #    self.bio = bio
+    #    self.created = created
+    #    self.image = image
+        
