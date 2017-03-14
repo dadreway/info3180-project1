@@ -30,7 +30,7 @@ def home():
 def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
-    
+########################################################################################
 @app.route('/profile', methods=['POST','GET'])
 def profile():
     """Creates new profile"""
@@ -64,38 +64,53 @@ def profile():
 
 ########################################################################################
 
-
-
-@app.route('/profiles', methods=['GET','POST'])
+@app.route('/profiles', methods=['GET'])
 def profiles():
+    profiles = UserProfile.query.filter_by().all()
+    return render_template('profiles.html', profile=profiles)
+
+@app.route('/profiles', methods=['POST'])
+def profilesjson():
     profile_list=[]
     
     profiles= UserProfile.query.filter_by().all()
     
-    if request.method == 'POST':
-        for profile in profiles:
-            profile_list +=[{'username':profile.username, 'userID':profile.id}]
-        return jsonify(users=profile_list)
-    elif request.method == 'GET':
-        return render_template('profiles.html', profile=profiles)
-    return redirect(url_for('home'))
+    for profile in profiles:
+        profile_list +=[{'username':profile.username, 'userID':profile.id}]
+    return jsonify(users=profile_list)
+    
+    #if request.method == 'POST':
+    #    for profile in profiles:
+    #        profile_list +=[{'username':profile.username, 'userID':profile.id}]
+    #    return jsonify(users=profile_list)
+    #elif request.method == 'GET':
+    #    return render_template('profiles.html', profile=profiles)
+    #return redirect(url_for('home'))
 
 
 #######################################################################################
 
 
-@app.route('/profile/<userid>', methods=['GET', 'POST'])
-def userprofile(userid):
+@app.route('/profile/<userid>', methods=['POST'])
+def userprofilejson(userid):
     json={}
     user = UserProfile.query.filter_by(id=userid).first()
-    if request.method == 'POST':
+    if user is not None:
         json={'userid':user.id, 'username':user.username, 'profile_image':user.pic, 'gender':user.gender, 'age':user.age, 'created_on':user.created}
-        return jsonify(json)
 
-    elif request.method == 'GET' and user:
-        return render_template('individual.html', profile=user)
+    else:
+        json={}
 
-    return render_template('profile.html')
+    return jsonify(json)
+
+#######
+    
+@app.route('/profile/<userid>', methods=["GET"])
+def Profile(userid):
+    """Render the website's profile page."""
+    user = UserProfile.query.filter_by(id=userid).first()
+    #return render_template('profile.html', profile=user)
+    return render_template('individual.html', profile=user)
 ###
 # The functions below should be applicable to all Flask apps.
 ###

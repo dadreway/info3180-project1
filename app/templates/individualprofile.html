@@ -9,21 +9,19 @@
     <div class="profile">
         <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
         <p><strong>Profile Created On:</strong> {{ profile.created }}</p>
-        <hr/>
         <p><strong>Username:</strong> {{ profile.username }}</p>
         <p><strong>UserID:</strong> {{ profile.id }}</p>
         <p><strong>Gender:</strong> {{ profile.gender }}</p>
         <p><strong>Age:</strong> {{ profile.age }}</p>
         <p><em>{{ profile.bio }}</em></p>
+        
     </div>
-
-    <div class="profile-requests">
-        <form action="{{ url_for('userprofile',userid=profile.id) }}" method="get">
-            <button class="btn btn-sm btn-warning submit-btn" type="submit">GET</button>
+    <div>
+       <form action="{{ url_for('userprofilejson',userid=profile.id) }}" method="get" enctype="application/json">
+            <button class="btn btn-sm btn-info submit-btn" type="submit">{{profile.first_name}}</button>
         </form>
+        <hr/>
+    </div><br><br>
+   
 
-        <form action="{{ url_for('userprofile',userid=profile.id) }}" method="post" enctype="application/json">
-            <button class="btn btn-sm btn-info submit-btn" type="submit">POST</button>
-        </form>
-    </div>
 </div>
